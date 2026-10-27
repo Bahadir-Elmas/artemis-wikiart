@@ -10,7 +10,10 @@ ten image encoders. A small classifier network is trained on the features. It is
 artist appears in both the training and the test set: 10-fold cross-validation and 10 stratified repeated
 splits (SSS), both grouped by artist.
 
-Archived release and extracted features: **Zenodo, DOI [to be added]**.
+[![DOI](https://zenodo.org/badge/1436305452.svg)](https://doi.org/10.5281/zenodo.23709917)
+
+- Code, splits and results (this repository, archived on Zenodo): [10.5281/zenodo.23709917](https://doi.org/10.5281/zenodo.23709917)
+- Extracted features: [10.5281/zenodo.23710694](https://doi.org/10.5281/zenodo.23710694)
 
 ## Contents
 
@@ -61,7 +64,7 @@ Set the environment variable `ARTEMIS_ROOT` if the data are stored elsewhere.
 1. `01_dataset_preparation` builds the metadata table and selects the 20 movements.
 2. Feature extraction can be done in either of two ways:
    - run `02_resnet50_features` (ResNet50) and `02B_gpu_features` once for each configuration (`MODEL_NAME`, `VIEWS`, `CROP_MODE`);
-   - or download the extracted features from Zenodo into `cache/embeddings/` and `cache/embeddings/gpu/`.
+   - or download the extracted features from Zenodo ([10.5281/zenodo.23710694](https://doi.org/10.5281/zenodo.23710694)) into `cache/embeddings/` and `cache/embeddings/gpu/`.
 3. `03_classification` is run once for each row of the table below. It writes
    `results/cv/classification_cv_results_full_<SPLIT_MODE>_<TAG>.xlsx`.
 4. `python analysis/paired_tests.py`, `python analysis/per_class_metrics.py`, `python analysis/figure3.py`
@@ -79,7 +82,7 @@ Set the environment variable `ARTEMIS_ROOT` if the data are stored elsewhere.
 `<model>` is one of `clip_vitl14`, `clip_vith14`, `siglip2_so400m`, `siglip2_so400m_224`, `dinov2_vitl14`,
 `dinov3_vitl16`, `convnext_l_in22k`, `convnext_l_clip`, `convnext_l_clip_320`.
 
-### Extracted features (Zenodo)
+### Extracted features (Zenodo, [10.5281/zenodo.23710694](https://doi.org/10.5281/zenodo.23710694))
 
 For every configuration there are three files: `<tag>.npy` (float16, L2-normalised, shape images × views ×
 dimension), `<tag>_index.parquet` (file name, row, `load_ok`) and `<tag>_info.json` (extractor specification).
@@ -128,4 +131,5 @@ subject to their own licences.
 
 ## Citation
 
-See `CITATION.cff`. Please cite the paper and the Zenodo record.
+See `CITATION.cff`. Please cite the paper and the Zenodo records: code, splits and results
+(https://doi.org/10.5281/zenodo.23709917) and extracted features (https://doi.org/10.5281/zenodo.23710694).

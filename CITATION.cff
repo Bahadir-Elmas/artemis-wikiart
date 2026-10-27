@@ -7,9 +7,16 @@ authors:
     given-names: Bahadır
     affiliation: "Department of Statistics, Mimar Sinan Fine Arts University, Istanbul, Türkiye"
     orcid: "https://orcid.org/0000-0002-8732-9997"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23709917
+    description: "Code, splits and results (all versions)"
+  - type: doi
+    value: 10.5281/zenodo.23710694
+    description: "Extracted features (all versions)"
 license: MIT
 repository-code: "https://github.com/Bahadir-Elmas/artemis-wikiart"
-version: "1.0.0"
+version: "1.0.1"
 date-released: "2026-10-28"
 keywords:
   - art movement classification
