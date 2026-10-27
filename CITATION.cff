@@ -6,10 +6,11 @@ authors:
   - family-names: Elmas
     given-names: Bahadır
     affiliation: "Department of Statistics, Mimar Sinan Fine Arts University, Istanbul, Türkiye"
+    orcid: "https://orcid.org/0000-0002-8732-9997"
 license: MIT
 repository-code: "https://github.com/Bahadir-Elmas/artemis-wikiart"
 version: "1.0.0"
-date-released: "2026-10-27"
+date-released: "2026-10-28"
 keywords:
   - art movement classification
   - WikiArt
@@ -21,6 +22,7 @@ preferred-citation:
   authors:
     - family-names: Elmas
       given-names: Bahadır
+      orcid: "https://orcid.org/0000-0002-8732-9997"
   title: "Artist-Disjoint Evaluation of Frozen Visual Representations for Art Movement Classification: Pretraining Type, Artist Leakage, and Variability"
   journal: "IEEE Access"
   year: 2026
