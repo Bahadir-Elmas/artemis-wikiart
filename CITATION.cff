@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this code or data, please cite the paper and the archived release."
+title: "Artist-disjoint evaluation of frozen visual representations for art movement classification: code, splits and results"
+type: software
+authors:
+  - family-names: Elmas
+    given-names: Bahadır
+    affiliation: "Department of Statistics, Mimar Sinan Fine Arts University, Istanbul, Türkiye"
+license: MIT
+repository-code: "https://github.com/Bahadir-Elmas/artemis-wikiart"
+version: "1.0.0"
+date-released: "2026-10-27"
+keywords:
+  - art movement classification
+  - WikiArt
+  - frozen features
+  - artist-disjoint evaluation
+  - vision-language models
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Elmas
+      given-names: Bahadır
+  title: "Artist-Disjoint Evaluation of Frozen Visual Representations for Art Movement Classification: Pretraining Type, Artist Leakage, and Variability"
+  journal: "IEEE Access"
+  year: 2026
+  notes: "Under review"

@@ -1,0 +1,12 @@
+# Notebooks 01, 02, 03 and analysis/ (Python 3.13; versions used in the paper)
+tensorflow==2.20.0
+scikit-learn==1.7.2        # required: other versions give different artist-disjoint splits
+numpy
+pandas
+pyarrow
+scipy
+openpyxl
+tqdm
+pillow
+matplotlib
+jupyter

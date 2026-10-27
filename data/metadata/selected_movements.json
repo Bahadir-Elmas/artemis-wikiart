@@ -1,0 +1,27 @@
+{
+    "dataset": "WikiArt",
+    "movement_count": 20,
+    "image_count": 65998,
+    "movements": [
+        "Abstract_Expressionism",
+        "Action_painting",
+        "Analytical_Cubism",
+        "Art_Nouveau_Modern",
+        "Color_Field_Painting",
+        "Contemporary_Realism",
+        "Cubism",
+        "Expressionism",
+        "Fauvism",
+        "Impressionism",
+        "Minimalism",
+        "Naive_Art_Primitivism",
+        "New_Realism",
+        "Pointillism",
+        "Pop_Art",
+        "Post_Impressionism",
+        "Realism",
+        "Romanticism",
+        "Symbolism",
+        "Synthetic_Cubism"
+    ]
+}

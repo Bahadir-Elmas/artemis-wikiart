@@ -1,0 +1,10 @@
+# images and large local files are not part of the repository
+data/wikiart/
+cache/
+results/excel/
+*.npy
+*.parquet
+*.keras
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
