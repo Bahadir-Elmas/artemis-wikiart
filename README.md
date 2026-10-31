@@ -3,7 +3,7 @@
 Code, data splits and results for the paper
 
 > B. Elmas, "Artist-Disjoint Evaluation of Frozen Visual Representations for Art Movement Classification:
-> Pretraining Type, Artist Leakage, and Variability," *IEEE Access*, under review.
+> Pretraining Type, Artist Leakage, and Variability," manuscript submitted for publication, 2026.
 
 Twenty painting movements of WikiArt (65,998 paintings, 936 artists) are classified from frozen features of
 ten image encoders. A small classifier network is trained on the features. It is evaluated on splits in which no
