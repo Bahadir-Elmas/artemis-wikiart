@@ -1,4 +1,4 @@
-"""Paired split-level comparisons of the feature extractors (Section V-B, Table 5).
+"""Paired split-level comparisons of the feature extractors (Section 4.2, Table 6).
 
 For every pair (A, B) and every scheme (10-fold CV, SSS) and metric, the 10 split-level differences
 A - B are tested with

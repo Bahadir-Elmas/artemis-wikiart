@@ -24,11 +24,15 @@ notebooks/
   02B_gpu_features.ipynb         features of the nine PyTorch configurations (timm / OpenCLIP)
   03_classification.ipynb        classifier network, artist-disjoint splits, evaluation, split export
 analysis/
-  paired_tests.py                Nadeau–Bengio corrected t-tests, Wilcoxon, Holm (Table 5)
-  per_class_metrics.py           per-movement recall / precision / F1 and confusions (Table 9)
+  paired_tests.py                Nadeau–Bengio corrected t-tests, Wilcoxon, Holm (Table 6)
+  per_class_metrics.py           per-movement recall / precision / F1 and confusions (Table 10)
+  robustness_analyses.py         confidence intervals, selection check, confusion-matrix analyses,
+                                 robustness experiments (Table 11)
   figure3.py, figure4.py         Figures 3 and 4
 tools/
   clean_info_json.py             normalises feature description files written by older runs of 02B
+  run_robustness_experiments.py  runs notebook 03 without class weights, with a linear classifier and with
+                                 other initialisation seeds
 data/metadata/
   selected_movements.json        the 20 movements
   image_list.csv.gz              the 65,998 paintings (file name, movement, artist, WikiArt style list)
@@ -67,17 +71,33 @@ Set the environment variable `ARTEMIS_ROOT` if the data are stored elsewhere.
    - or download the extracted features from Zenodo ([10.5281/zenodo.23710694](https://doi.org/10.5281/zenodo.23710694)) into `cache/embeddings/` and `cache/embeddings/gpu/`.
 3. `03_classification` is run once for each row of the table below. It writes
    `results/cv/classification_cv_results_full_<SPLIT_MODE>_<TAG>.xlsx`.
-4. `python analysis/paired_tests.py`, `python analysis/per_class_metrics.py`, `python analysis/figure3.py`
-   and `python analysis/figure4.py` are run from the repository root.
+4. `python analysis/paired_tests.py`, `python analysis/per_class_metrics.py`, `python analysis/robustness_analyses.py`,
+   `python analysis/figure3.py` and `python analysis/figure4.py` are run from the repository root.
 
 | Experiment (paper) | `FEATURE_SOURCE` | `FEATURE_VIEW` | Other settings |
 |---|---|---|---|
-| Backbone comparison (Table 5) | `resnet50_nb02`, `wikiart_<model>_full` for the nine models of 02B | `full` | `LEVEL=20` |
-| Movement merging (Tables 3–4) | ResNet50, CLIP ViT-L/14, DINOv2, SigLIP2 (CLIP ViT-L/14 also with crops) | `full`, `full+crops_mean`, `all_expand` | `LEVEL=16` or `12` |
-| Multi-view inference (Table 6) | `wikiart_clip_vitl14_fullcrops6_f0.5`, `wikiart_clip_vitl14_fullcrops4_quad` | `full+crops_mean`, `all_expand` | |
-| Feature concatenation (Table 6) | `["wikiart_clip_vitl14_fullcrops6_f0.5", "wikiart_dinov2_vitl14_full"]` | `full` | |
-| Artist leakage (Table 7) | `resnet50_nb02`, `wikiart_clip_vitl14_full` | `full` | `SPLIT_MODE="random"` |
-| Per-artist cap (Table 8) | `wikiart_siglip2_so400m_full` | `full` | `MAX_PER_ARTIST=150` or `SINGLE_STYLE_ONLY=True` |
+| Backbone comparison (Tables 3 and 6) | `resnet50_nb02`, `wikiart_<model>_full` for the nine models of 02B | `full` | `LEVEL=20` |
+| Movement merging (Tables 4–5) | ResNet50, CLIP ViT-L/14, DINOv2, SigLIP2 (CLIP ViT-L/14 also with crops) | `full`, `full+crops_mean`, `all_expand` | `LEVEL=16` or `12` |
+| Multi-view inference (Table 7) | `wikiart_clip_vitl14_fullcrops6_f0.5`, `wikiart_clip_vitl14_fullcrops4_quad` | `full+crops_mean`, `all_expand` | |
+| Feature concatenation (Table 7) | `["wikiart_clip_vitl14_fullcrops6_f0.5", "wikiart_dinov2_vitl14_full"]` | `full` | |
+| Artist leakage (Table 8) | `resnet50_nb02`, `wikiart_clip_vitl14_full` | `full` | `SPLIT_MODE="random"` |
+| Per-artist cap (Table 9) | `wikiart_siglip2_so400m_full` | `full` | `MAX_PER_ARTIST=150` or `SINGLE_STYLE_ONLY=True` |
+
+### Robustness experiments (Table 11)
+
+`python tools/run_robustness_experiments.py` runs notebook 03 again on the same 20 splits with three changes to
+the classifier. The settings are passed through environment variables; with the default settings the notebook
+reproduces the main experiments.
+
+| Group | Setting | Configurations | Suffix of the workbook |
+|---|---|---|---|
+| A | no class weights (`ARTEMIS_BALANCE=none`) | all ten | `_nocw` |
+| B | linear classifier, no hidden layer (`ARTEMIS_HEAD_HIDDEN=0`) | all ten | `_linear` |
+| C | initialisation seeds 43–46 (`ARTEMIS_INIT_SEED`), 10-fold scheme | SigLIP2 So400m/16 (384) | `_init43` … `_init46` |
+
+`python analysis/robustness_analyses.py` then writes `results/analysis/L20_robustness.xlsx`. The workbook also
+holds the confidence intervals of the paired differences, the leave-one-fold-out repetition of the main-model
+selection and the analyses of the pooled confusion matrices that are reported in the paper.
 
 `<model>` is one of `clip_vitl14`, `clip_vith14`, `siglip2_so400m`, `siglip2_so400m_224`, `dinov2_vitl14`,
 `dinov3_vitl16`, `convnext_l_in22k`, `convnext_l_clip`, `convnext_l_clip_320`.
@@ -122,6 +142,24 @@ with 1.9.1). Use the pinned version in `requirements-tf.txt`, or read the splits
 | SigLIP2 So400m/16 (384) | 53.4 | 53.3 | 45.6 |
 
 The results of the SSS scheme, the confidence intervals and the paired tests are in `results/` and in the paper.
+
+### Classifier configuration (accuracy / balanced accuracy, %, 10-fold)
+
+| Feature extractor | Main classifier | No class weights | Linear classifier |
+|---|---|---|---|
+| ResNet50 (ImageNet-1k) | 33.1 / 34.5 | 40.9 / 32.4 | 35.6 / 35.4 |
+| DINOv2 ViT-L/14 | 41.7 / 43.7 | 49.7 / 41.9 | 44.9 / 45.7 |
+| ConvNeXt-L (ImageNet-22k) | 42.7 / 44.5 | 49.5 / 42.9 | 44.5 / 44.5 |
+| DINOv3 ViT-L/16 | 45.7 / 48.4 | 54.2 / 45.9 | 49.4 / 48.8 |
+| CLIP ViT-L/14 | 48.4 / 51.0 | 56.4 / 48.9 | 51.2 / 51.6 |
+| ConvNeXt-L (CLIP, 256) | 49.6 / 48.8 | 56.1 / 47.4 | 50.1 / 49.8 |
+| ConvNeXt-L (CLIP, 320) | 50.1 / 49.5 | 56.1 / 47.5 | 50.9 / 49.6 |
+| SigLIP2 So400m/14 (224) | 52.1 / 53.2 | 58.1 / 50.3 | 52.9 / 52.7 |
+| OpenCLIP ViT-H/14 | 52.5 / 53.5 | 58.0 / 50.5 | 53.0 / 52.3 |
+| SigLIP2 So400m/16 (384) | 53.4 / 53.3 | 58.2 / 49.6 | 53.6 / 53.3 |
+
+The main classifier is trained with inverse-frequency class weights and one hidden layer. With five
+initialisation seeds, the 10-fold accuracy of SigLIP2 So400m/16 (384) ranges from 52.9% to 54.6%.
 
 ## Licence
 

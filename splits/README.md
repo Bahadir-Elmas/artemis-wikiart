@@ -9,4 +9,4 @@ seeds 42–51). Each cell gives the role of the painting in that split:
 - `test`: test fold.
 
 `movement` is the class label at the given level (L20, L16 or L12). `random` files are the
-artist-overlapping splits used for the leakage measurement (Table 7).
+artist-overlapping splits used for the leakage measurement (Table 8).

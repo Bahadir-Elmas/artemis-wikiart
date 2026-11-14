@@ -10,3 +10,5 @@ tqdm
 pillow
 matplotlib
 jupyter
+nbconvert
+ipykernel

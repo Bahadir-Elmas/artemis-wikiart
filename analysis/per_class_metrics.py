@@ -1,4 +1,4 @@
-"""Per-movement analysis of SigLIP2 So400m/16-384 at the 20-movement level (Section VI, Table 9).
+"""Per-movement analysis of SigLIP2 So400m/16-384 at the 20-movement level (Section 4.7, Table 10).
 
 Recall, precision and F1 are computed from the confusion matrices pooled over the 10 test folds of
 the artist-disjoint 10-fold cross-validation (and, for comparison, over the 10 SSS repetitions and for
@@ -19,7 +19,7 @@ P = "classification_cv_results_full_artist_disjoint_L20"
 SIGLIP = CV / f"{P}_siglip2_so400m-full.xlsx"
 CLIP = CV / f"{P}_clip_vitl14-full.xlsx"
 
-# Paintings and artists per movement in the 20-movement data set (Table 2 of the paper).
+# Paintings and artists per movement in the 20-movement data set (Table 10 of the paper).
 PAINTINGS_ARTISTS = {
     "Action_painting": (93, 7), "Analytical_Cubism": (110, 5), "Synthetic_Cubism": (216, 7),
     "New_Realism": (313, 6), "Contemporary_Realism": (481, 15), "Pointillism": (501, 33),

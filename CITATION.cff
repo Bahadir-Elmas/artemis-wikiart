@@ -16,8 +16,8 @@ identifiers:
     description: "Extracted features (all versions)"
 license: MIT
 repository-code: "https://github.com/Bahadir-Elmas/artemis-wikiart"
-version: "1.0.2"
-date-released: "2026-11-01"
+version: "1.1.0"
+date-released: "2026-11-14"
 keywords:
   - art movement classification
   - WikiArt
