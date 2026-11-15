@@ -28,11 +28,17 @@ analysis/
   per_class_metrics.py           per-movement recall / precision / F1 and confusions (Table 10)
   robustness_analyses.py         confidence intervals, selection check, confusion-matrix analyses,
                                  robustness experiments (Table 11)
+  external_validation.py         external validation on National Gallery of Art paintings (Table 12)
   figure3.py, figure4.py         Figures 3 and 4
 tools/
   clean_info_json.py             normalises feature description files written by older runs of 02B
   run_robustness_experiments.py  runs notebook 03 without class weights, with a linear classifier and with
                                  other initialisation seeds
+  download_nga.py                downloads the open-access images of the external test set
+  run_external_validation.py     extracts the features of the external images and applies classifiers
+                                 trained on all WikiArt paintings to them
+data/external_nga/
+  nga_paintings.csv              the 1,223 National Gallery of Art paintings of the external test set
 data/metadata/
   selected_movements.json        the 20 movements
   image_list.csv.gz              the 65,998 paintings (file name, movement, artist, WikiArt style list)
@@ -44,7 +50,7 @@ results/
   figures/                       Figures 3 and 4
 ```
 
-The WikiArt images are not redistributed. The trained classifiers are not part of this repository.
+The WikiArt images and the National Gallery of Art images are not redistributed. The trained classifiers are not part of this repository.
 
 ## Data
 
@@ -98,6 +104,24 @@ reproduces the main experiments.
 `python analysis/robustness_analyses.py` then writes `results/analysis/L20_robustness.xlsx`. The workbook also
 holds the confidence intervals of the paired differences, the leave-one-fold-out repetition of the main-model
 selection and the analyses of the pooled confusion matrices that are reported in the paper.
+
+### External validation (Table 12)
+
+The classifiers are trained on all WikiArt paintings and applied, without adaptation, to 1,223 open-access
+paintings of the National Gallery of Art (NGA), Washington, DC, in nine of the 20 movements. The list
+`data/external_nga/nga_paintings.csv` was built from the museum's open data
+(https://github.com/NationalGalleryOfArt/opendata, CC0): works classified as paintings, with an open-access
+image and exactly one style term that corresponds to one of the 20 movements.
+
+1. `python tools/download_nga.py` downloads the images (long side at most 2048 px) and writes the metadata file.
+2. `python tools/run_external_validation.py features` extracts the features with the nine PyTorch
+   configurations (notebook 02B with `ARTEMIS_DATASET=nga`); `--pilot` first runs a short test that also
+   compares newly extracted WikiArt features with the stored ones.
+3. `python tools/run_external_validation.py classify` runs notebook 03 with `ARTEMIS_EXTERNAL_TEST=nga` for the
+   ten configurations: five training runs each, with different inner validation sets and initialisation seeds.
+   The workbooks `results/cv/external_nga_full_L20*_external-nga.xlsx` hold the runs, the prediction of every
+   painting in every run and a confusion matrix.
+4. `python analysis/external_validation.py` writes `results/analysis/external_nga.xlsx`.
 
 `<model>` is one of `clip_vitl14`, `clip_vith14`, `siglip2_so400m`, `siglip2_so400m_224`, `dinov2_vitl14`,
 `dinov3_vitl16`, `convnext_l_in22k`, `convnext_l_clip`, `convnext_l_clip_320`.
@@ -161,10 +185,29 @@ The results of the SSS scheme, the confidence intervals and the paired tests are
 The main classifier is trained with inverse-frequency class weights and one hidden layer. With five
 initialisation seeds, the 10-fold accuracy of SigLIP2 So400m/16 (384) ranges from 52.9% to 54.6%.
 
+### External validation on NGA paintings (accuracy, %, mean of five training runs)
+
+| Feature extractor | WikiArt, 10-fold | NGA (n = 1,223) | NGA, artists not in WikiArt (n = 693) |
+|---|---|---|---|
+| ResNet50 | 33.1 | 34.5 | 31.1 |
+| DINOv2 ViT-L/14 | 41.7 | 37.7 | 33.0 |
+| ConvNeXt-L (IN-22k) | 42.7 | 38.9 | 36.6 |
+| DINOv3 ViT-L/16 | 45.7 | 44.6 | 40.7 |
+| CLIP ViT-L/14 | 48.4 | 48.9 | 45.9 |
+| ConvNeXt-L (CLIP, 256) | 49.6 | 47.5 | 43.5 |
+| ConvNeXt-L (CLIP, 320) | 50.1 | 51.1 | 50.7 |
+| SigLIP2 So400m/14 (224) | 52.1 | 50.8 | 47.2 |
+| OpenCLIP ViT-H/14 | 52.5 | 47.2 | 41.7 |
+| SigLIP2 So400m/16 (384) | 53.4 | 50.9 | 48.0 |
+
+The external set covers nine movements; 98% of its paintings belong to five of them (Realism, Naive Art,
+Impressionism, Romanticism and Post-Impressionism).
+
 ## Licence
 
 Code: MIT (`LICENSE`). Split files, lists, features and result tables: CC BY 4.0 (`LICENSE-data.md`).
-The WikiArt images remain subject to the terms of their original sources. The pretrained encoders are
+The WikiArt images remain subject to the terms of their original sources. The descriptive data in
+`data/external_nga/nga_paintings.csv` come from the open data of the National Gallery of Art (CC0). The pretrained encoders are
 subject to their own licences.
 
 ## Citation
